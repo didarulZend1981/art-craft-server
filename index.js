@@ -18,9 +18,9 @@ app.use(express.json());
 
 // console.log(process.env.BD_USER)
 
-const uri = "mongodb://localhost:27017";
+//const uri = "mongodb://localhost:27017";
 
-// const uri = `mongodb+srv://${process.env.BD_USER}:${process.env.BD_PASS}@cluster0.ckoz8fu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${process.env.BD_USER}:${process.env.BD_PASS}@cluster0.ckoz8fu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 
 
@@ -37,9 +37,16 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const productCollection = client.db("artCraft").collection("artCraftProducts");
-  
+    const catCollection = client.db("artCraft").collection("Craft");
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
+    app.get('/allCategory', async (req, res) => {
+       console.log(req.body);
+      const cursor = catCollection.find();
+      const result = await cursor.toArray();
+      console.log(result);
+      res.send(result);
+  })
 
     app.delete('/product/:id', async (req, res) => {
       const id = req.params.id;
